@@ -1,4 +1,3 @@
-
 import { google } from 'googleapis';
 import { getAuthenticatedClient } from './auth.js';
 import fs from 'node:fs';
@@ -27,7 +26,7 @@ async function listRoot(drive) {
             q: "'root' in parents and trashed = false",
             pageSize: 1000,
             orderBy: 'folder,name',
-            fields: 'nextPageToken, files(id, name, mimeType)',
+            fields: 'nextPageToken, files(id, name, mimeType, modifiedTime)',
             pageToken
         });
 
@@ -42,13 +41,17 @@ async function listRoot(drive) {
 }
 
 
-async function main() {
+export async function getDrive() {
     const auth = await getAuthenticatedClient();
     const drive = google.drive({version: 'v3', auth});
-    const { folders, looseFiles } = await listRoot(drive);
+    /* const { folders, looseFiles } = await listRoot(drive);
 
-    for (const folder of folders) console.log(`󰣞 ${folder.name} (${folder.id})`);
-    for (const file of looseFiles) console.log(`󰡯 ${file.name} (${file.id})`);
+    console.log("---------------------------------")
+    for (const folder of folders) console.log(`󰣞 ${folder.name} (${folder.id}) - ${folder.modifiedTime}`);
+    for (const file of looseFiles) console.log(`󰡯 ${file.name} (${file.id}) - ${file.modifiedTime}`);
+    console.log("---------------------------------") */
+
+    return drive;
 }
 
-main().catch(console.error);
+// main().catch(console.error);
