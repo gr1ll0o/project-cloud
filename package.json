@@ -9,7 +9,11 @@
     "dev": "tsc --watch"
   },
   "devDependencies": {
-    "@types/node": "^24.19.1",
-    "typescript": "^5.0.0"
+    "ts-node": "^10.9.2"
+  },
+  "dependencies": {
+    "@googleapis/drive": "^26.0.2",
+    "electron": "^44.7.0",
+    "open": "^11.0.4"
   }
 }
