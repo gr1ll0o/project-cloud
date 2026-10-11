@@ -34,7 +34,7 @@ async function startGoogleAuthentication() {
 
     if (!address || typeof address === 'string') {
         server.close();
-        throw new Error('No se pudo iniciar el servidor local');
+        throw new Error('The local server could not be started.');
     }
 
     const redirectUrl = `http://127.0.0.1:${address.port}`;
@@ -50,14 +50,14 @@ async function startGoogleAuthentication() {
             const url = new URL(req.url ?? '/', redirectUrl);
             if (url.pathname !== '/') {
                 res.writeHead(404);
-                res.end('No encontrado');
+                res.end('Not found');
                 return;
             }
 
             const error = url.searchParams.get('error');
             if (error) {
                 res.writeHead(400);
-                res.end('Autenticación cancelada');
+                res.end('Auth cancelled.');
                 reject(new Error(error));
                 return;
             }
@@ -65,7 +65,7 @@ async function startGoogleAuthentication() {
             const code = url.searchParams.get('code');
             if (!code) {
                 res.writeHead(400);
-                res.end('Falta el código de autorización');
+                res.end('Missing auth code.');
                 return;
             }
 
@@ -73,12 +73,12 @@ async function startGoogleAuthentication() {
                 const { tokens } = await oauth2Client.getToken(code);
 
                 res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
-                res.end('<h1>¡Autenticación exitosa!</h1>');
+                res.end('<h1>Succesfull auth</h1>');
 
                 resolve(tokens);
             } catch (error) {
                 res.writeHead(500);
-                res.end('Error de autenticación');
+                res.end('Auth error.');
                 reject(error);
             }
         });
@@ -100,7 +100,7 @@ async function startGoogleAuthentication() {
             });
         });
 
-        console.log('Servidor local cerrado.');
+        console.log('Local server closed.');
     }
 }
 
@@ -115,11 +115,11 @@ export async function getAuthenticatedClient() {
 
             oauth2Client.setCredentials(tokens);
             await oauth2Client.getAccessToken();
-            console.log('Sesión recuperada.');
+            console.log('Recovered session.');
 
             return oauth2Client;
         } catch (error) {
-            console.error('No se pudieron reutilizar los tokens. Se intentará autenticar nuevamente.', error);
+            console.error('The tokens could not be reused. An attempt will be made to authenticate again.', error);
         }
     }
 
@@ -152,6 +152,6 @@ export async function getAuthenticatedClient() {
         { mode: 0o600 }
     );
 
-    console.log('Tokens guardados.');
+    console.log('Tokens saved.');
     return newClient;
 }
